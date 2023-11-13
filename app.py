@@ -1,4 +1,4 @@
-from app import Flask, render_template, request
+from flask import Flask, render_template, request
 from torchvision import transforms
 from PIL import Image
 import torch
