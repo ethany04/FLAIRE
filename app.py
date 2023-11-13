@@ -6,6 +6,7 @@ import io
 from model import CNNModel
 from flask import Flask, render_template, request
 from werkzeug.utils import secure_filename
+import time
 
 app = Flask(__name__)
 
@@ -40,13 +41,20 @@ def upload_file():
         image = transform(image)
         image = image.unsqueeze(0)  # Add batch dimension
 
+        start_time = time.time()
+
         # Make a prediction
         with torch.no_grad():
             outputs = model(image)
             _, predicted = torch.max(outputs, 1)
             prediction_label = label_mapping[predicted.item()]  
+        
+        end_time = time.time()
+        total_time = end_time - start_time
+        fps = 1.0 / total_time if total_time > 0 else "NaN"
 
-    return render_template('result.html', label=prediction_label)
+
+    return render_template('result.html', label=prediction_label, time=total_time, fps=fps)
 
 if __name__ == '__main__':
     app.run(debug=True)
