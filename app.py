@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request
+from app import Flask, render_template, request
 from torchvision import transforms
 from PIL import Image
 import torch
 import io
 from model import CNNModel
-from flask import Flask, render_template, request
 from werkzeug.utils import secure_filename
 import time
 
@@ -39,11 +38,11 @@ def upload_file():
         image_bytes = file.read()
         image = Image.open(io.BytesIO(image_bytes))
         image = transform(image)
-        image = image.unsqueeze(0)  # Add batch dimension
+        image = image.unsqueeze(0)  
 
         start_time = time.time()
 
-        # Make a prediction
+        #prediction
         with torch.no_grad():
             outputs = model(image)
             _, predicted = torch.max(outputs, 1)
